@@ -21,7 +21,7 @@ input {
     margin-top: 10px;
 }
 
-button {
+button .restart {
     padding: 10px 15px;
     margin-top: 10px;
     cursor: pointer;
