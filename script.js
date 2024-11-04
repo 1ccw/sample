@@ -1,6 +1,27 @@
 let randomNumber = Math.floor(Math.random() * 500) + 1;
 let attempts = 0;
 let maxAttempts = 20;
+let sensorData = 0;  // 센서 데이터 값을 저장할 변수
+
+// 센서 데이터 가져오는 함수
+async function fetchSensorData() {
+    try {
+        const response = await fetch('https://api.example.com/sensor-data');  // 실제 API URL로 변경
+        if (!response.ok) {
+            throw new Error('네트워크 응답이 좋지 않습니다.');
+        }
+        const data = await response.json();
+        sensorData = data.value;  // 예시로 data.value에 센서 데이터가 저장되어 있다고 가정
+        console.log('센서 데이터:', sensorData);  // 센서 데이터를 콘솔에 출력
+    } catch (error) {
+        console.error('센서 데이터를 가져오는 데 오류 발생:', error);
+    }
+}
+
+// 페이지 로드 시 센서 데이터 가져오기
+window.onload = function() {
+    fetchSensorData();
+};
 
 document.getElementById('submitGuess').addEventListener('click', function() {
     const guessInput = document.getElementById('guess').value.trim(); // 공백 제거
