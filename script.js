@@ -1,6 +1,6 @@
-let randomNumber = Math.floor(Math.random() * 100) + 1;
+let randomNumber = Math.floor(Math.random() * 500) + 1;
         let attempts = 0;
-        let maxAttempts = 10;
+        let maxAttempts = 20;
 
         document.getElementById('submitGuess').addEventListener('click', function() {
             const guess = Number(document.getElementById('guess').value);
@@ -8,8 +8,8 @@ let randomNumber = Math.floor(Math.random() * 100) + 1;
             let resultText = '';
             let attemptsLeft = maxAttempts - attempts;
 
-            if (guess < 1 || guess > 100) {
-                resultText = '1부터 100 사이의 숫자를 입력하세요.';
+            if (guess < 1 || guess > 500) {
+                resultText = '1부터 500 사이의 숫자를 입력하세요.';
             } else if (guess > randomNumber) {
                 resultText = '더 작은 숫자를 시도해 보세요.';
             } else if (guess < randomNumber) {
@@ -18,6 +18,17 @@ let randomNumber = Math.floor(Math.random() * 100) + 1;
                 resultText = `축하합니다! ${attempts}번 만에 맞추셨습니다!`;
                 document.getElementById('restart').style.display = 'block';
                 document.getElementById('submitGuess').disabled = true;
+            }
+
+            // 힌트 추가
+            if (attempts >= 5 && attempts < 10) {
+                resultText += ` (힌트: ${randomNumber.toString().length}자리 숫자입니다.)`;
+            } else if (attempts >= 10 && attempts < 15) {
+                const lastDigit = randomNumber % 10;
+                resultText += ` (힌트: 마지막 자리 숫자는 ${lastDigit}입니다.)`;
+            } else if (attempts >= 15 && attempts < 20) {
+                const secondDigit = Math.floor((randomNumber % 100) / 10);
+                resultText += ` (힌트: 두 번째 자리 숫자는 ${secondDigit}입니다.)`;
             }
 
             if (attemptsLeft > 0 && resultText.includes('시도해 보세요.')) {
@@ -34,7 +45,7 @@ let randomNumber = Math.floor(Math.random() * 100) + 1;
         });
 
         document.getElementById('restart').addEventListener('click', function() {
-            randomNumber = Math.floor(Math.random() * 100) + 1;
+            randomNumber = Math.floor(Math.random() * 500) + 1;
             attempts = 0;
             document.getElementById('result').innerText = '';
             document.getElementById('guess').value = '';
