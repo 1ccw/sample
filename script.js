@@ -22,13 +22,13 @@ let randomNumber = Math.floor(Math.random() * 500) + 1;
 
             // 힌트 추가
             if (attempts >= 5 && attempts < 10) {
-                resultText += ` (힌트: ${randomNumber.toString().length}자리 숫자입니다.)`;
+                resultText += ` \n(힌트 : ${randomNumber.toString().length}자리 숫자입니다.)`;
             } else if (attempts >= 10 && attempts < 15) {
                 const lastDigit = randomNumber % 10;
-                resultText += ` (힌트: 마지막 자리 숫자는 ${lastDigit}입니다.)`;
+                resultText += ` \n(힌트 : 마지막 자리 숫자는 ${lastDigit}입니다.)`;
             } else if (attempts >= 15 && attempts < 20) {
                 const secondDigit = Math.floor((randomNumber % 100) / 10);
-                resultText += ` (힌트: 두 번째 자리 숫자는 ${secondDigit}입니다.)`;
+                resultText += ` \n(힌트 : 두 번째 자리 숫자는 ${secondDigit}입니다.)`;
             }
 
             if (attemptsLeft > 0 && resultText.includes('시도해 보세요.')) {
