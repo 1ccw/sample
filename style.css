@@ -21,9 +21,13 @@ input {
     margin-top: 10px;
 }
 
-button .restart {
+button {
     padding: 10px 15px;
     margin-top: 10px;
     cursor: pointer;
+    justify-content: center;
+}
+
+.restart {
     justify-content: center;
 }
