@@ -18,6 +18,7 @@ let randomNumber = Math.floor(Math.random() * 500) + 1;
                 resultText = `축하합니다! ${attempts}번 만에 맞추셨습니다!`;
                 document.getElementById('restart').style.display = 'block';
                 document.getElementById('submitGuess').disabled = true;
+                document.getElementById('attemptsLeft').style.display = 'none';  // 남은 횟수 숨김
             }
 
             // 힌트 추가
@@ -50,6 +51,7 @@ let randomNumber = Math.floor(Math.random() * 500) + 1;
             document.getElementById('result').innerText = '';
             document.getElementById('guess').value = '';
             document.getElementById('attemptsLeft').innerText = `남은 횟수: ${maxAttempts}`;
+            document.getElementById('attemptsLeft').style.display = 'block';  // 남은 횟수 다시 표시
             document.getElementById('restart').style.display = 'none';
             document.getElementById('submitGuess').disabled = false;
         });
