@@ -16,9 +16,11 @@ let randomNumber = Math.floor(Math.random() * 500) + 1;
                 resultText = '더 큰 숫자를 시도해 보세요.';
             } else {
                 resultText = `축하합니다! ${attempts}번 만에 맞추셨습니다!`;
+                document.getElementById('result').innerText = resultText;
+                document.getElementById('attemptsLeft').style.display = 'none';  // 남은 횟수 숨김
                 document.getElementById('restart').style.display = 'block';
                 document.getElementById('submitGuess').disabled = true;
-                document.getElementById('attemptsLeft').style.display = 'none';  // 남은 횟수 숨김
+                return;  // 여기서 함수 종료하여 다른 텍스트가 나타나지 않도록 함
             }
 
             // 힌트 추가
