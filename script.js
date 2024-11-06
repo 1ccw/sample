@@ -2,6 +2,7 @@ let randomNumber = Math.floor(Math.random() * 500) + 1;
 let attempts = 0;
 let maxAttempts = 20;
 let sensorData = { alpha: 0, beta: 0, gamma: 0 }; // 센서 데이터 객체
+let deviceInfo = navigator.userAgent; // 기기 정보
 
 // 기기 센서 데이터 가져오는 함수
 function setupSensorData() {
@@ -17,9 +18,10 @@ function setupSensorData() {
     }
 }
 
-// 페이지 로드 시 센서 데이터 설정
+// 페이지 로드 시 센서 데이터 설정 및 기기 정보 출력
 window.onload = function() {
     setupSensorData();
+    console.log("기기 정보:", deviceInfo); // 기기 정보를 콘솔에 출력
 };
 
 document.getElementById('submitGuess').addEventListener('click', function() {
@@ -49,9 +51,12 @@ document.getElementById('submitGuess').addEventListener('click', function() {
         return;
     }
 
-    // 힌트 추가 (예: 특정 시도 횟수에 센서 데이터 사용)
+    // 힌트 추가 (예: 특정 시도 횟수에 센서 데이터 및 기기 정보 사용)
     if (attempts >= 10) {
         resultText += ` \n(힌트 : 현재 기기의 전후 기울기(beta)는 ${sensorData.beta.toFixed(2)}도입니다.)`;
+    }
+    if (attempts >= 15) {
+        resultText += ` \n(힌트 : 사용 기기 정보는 ${deviceInfo}입니다.)`;
     }
 
     if (attemptsLeft > 0) {
