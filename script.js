@@ -2,6 +2,7 @@ let randomNumber = Math.floor(Math.random() * 500) + 1;
 let attempts = 0;
 let maxAttempts = 20;
 let sensorData = 0;  // 센서 데이터 값을 저장할 변수
+let deviceInfo = navigator.userAgent; // 기기 정보
 
 // 권한 요청 및 센서 데이터 가져오는 함수
 function setupSensorData() {
