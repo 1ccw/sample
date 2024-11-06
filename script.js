@@ -1,29 +1,43 @@
 let randomNumber = Math.floor(Math.random() * 500) + 1;
 let attempts = 0;
 let maxAttempts = 20;
-let sensorData = { alpha: 0, beta: 0, gamma: 0 }; // 센서 데이터 객체
+let sensorData = { alpha: 0, beta: 0, gamma: 0 };
 let deviceInfo = navigator.userAgent; // 기기 정보
 
-// 기기 센서 데이터 가져오는 함수
+// 권한 요청 및 센서 데이터 가져오는 함수
 function setupSensorData() {
-    if (window.DeviceOrientationEvent) {
-        window.addEventListener("deviceorientation", function(event) {
-            sensorData.alpha = event.alpha; // 장치의 회전 각도 (z축 회전)
-            sensorData.beta = event.beta;   // 장치의 전후 기울기 (x축)
-            sensorData.gamma = event.gamma; // 장치의 좌우 기울기 (y축)
-            console.log('센서 데이터:', sensorData);  // 콘솔에 출력
-        });
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // iOS 13+ 환경에서 권한 요청
+        DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                    window.addEventListener("deviceorientation", handleOrientation);
+                } else {
+                    alert("센서 데이터 접근이 거부되었습니다.");
+                }
+            })
+            .catch(console.error);
     } else {
-        console.error('이 기기는 DeviceOrientation을 지원하지 않습니다.');
+        // Android 및 다른 환경
+        window.addEventListener("deviceorientation", handleOrientation);
     }
+}
+
+// 센서 데이터 업데이트 함수
+function handleOrientation(event) {
+    sensorData.alpha = event.alpha;
+    sensorData.beta = event.beta;
+    sensorData.gamma = event.gamma;
+    console.log('센서 데이터:', sensorData);
 }
 
 // 페이지 로드 시 센서 데이터 설정 및 기기 정보 출력
 window.onload = function() {
     setupSensorData();
-    console.log("기기 정보:", deviceInfo); // 기기 정보를 콘솔에 출력
+    console.log("기기 정보:", deviceInfo);
 };
 
+// 게임 코드 부분 (이전 코드 그대로 유지)
 document.getElementById('submitGuess').addEventListener('click', function() {
     const guessInput = document.getElementById('guess').value.trim();
     const guess = Number(guessInput);
@@ -31,7 +45,6 @@ document.getElementById('submitGuess').addEventListener('click', function() {
     let resultText = '';
     let attemptsLeft = maxAttempts - attempts;
 
-    // 입력 체크
     if (guessInput === '') {
         alert('숫자를 입력하세요.');
         attempts--;
@@ -51,7 +64,6 @@ document.getElementById('submitGuess').addEventListener('click', function() {
         return;
     }
 
-    // 힌트 추가 (예: 특정 시도 횟수에 센서 데이터 및 기기 정보 사용)
     if (attempts >= 10) {
         resultText += ` \n(힌트 : 현재 기기의 전후 기울기(beta)는 ${sensorData.beta.toFixed(2)}도입니다.)`;
     }
