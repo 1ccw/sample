@@ -3,24 +3,37 @@ let attempts = 0;
 let maxAttempts = 20;
 let sensorData = 0;  // 센서 데이터 값을 저장할 변수
 
-// 센서 데이터 가져오는 함수
-async function fetchSensorData() {
-    try {
-        const response = await fetch('https://api.example.com/sensor-data');  // 실제 API URL로 변경
-        if (!response.ok) {
-            throw new Error('네트워크 응답이 좋지 않습니다.');
-        }
-        const data = await response.json();
-        sensorData = data.value;  // 예시로 data.value에 센서 데이터가 저장되어 있다고 가정
-        console.log('센서 데이터:', sensorData);  // 센서 데이터를 콘솔에 출력
-    } catch (error) {
-        console.error('센서 데이터를 가져오는 데 오류 발생:', error);
+// 권한 요청 및 센서 데이터 가져오는 함수
+function setupSensorData() {
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // iOS 13+ 환경에서 권한 요청
+        DeviceOrientationEvent.requestPermission()
+            .then(permissionState => {
+                if (permissionState === 'granted') {
+                    window.addEventListener("deviceorientation", handleOrientation);
+                } else {
+                    alert("센서 데이터 접근이 거부되었습니다.");
+                }
+            })
+            .catch(console.error);
+    } else {
+        // Android 및 다른 환경
+        window.addEventListener("deviceorientation", handleOrientation);
     }
 }
 
-// 페이지 로드 시 센서 데이터 가져오기
+// 센서 데이터 업데이트 함수
+function handleOrientation(event) {
+    sensorData.alpha = event.alpha;
+    sensorData.beta = event.beta;
+    sensorData.gamma = event.gamma;
+    console.log('센서 데이터:', sensorData);
+}
+
+// 페이지 로드 시 센서 데이터 설정 및 기기 정보 출력
 window.onload = function() {
-    fetchSensorData();
+    setupSensorData();
+    console.log("기기 정보:", deviceInfo);
 };
 
 document.getElementById('submitGuess').addEventListener('click', function() {
