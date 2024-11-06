@@ -1,8 +1,8 @@
 let randomNumber = Math.floor(Math.random() * 500) + 1;
 let attempts = 0;
 let maxAttempts = 20;
-let sensorData = 0;  // 센서 데이터 값을 저장할 변수
-let deviceInfo = navigator.userAgent; // 기기 정보
+let sensorData = { alpha: 0, beta: 0, gamma: 0 };  // 센서 데이터 저장 객체
+let deviceInfo = navigator.userAgent;  // 기기 정보
 
 // 권한 요청 및 센서 데이터 가져오는 함수
 function setupSensorData() {
@@ -74,7 +74,7 @@ document.getElementById('submitGuess').addEventListener('click', function() {
         const secondDigit = Math.floor((randomNumber % 100) / 10);
         resultText += ` \n(힌트 : 두 번째 자리 숫자는 ${secondDigit}입니다.)`;
     } else if (attempts === 20) {
-        resultText += ` \n(힌트 : 센서 값은 현재 ${sensorData}입니다.)`; // 마지막 시도에 센서 값 힌트
+        resultText += ` \n(힌트 : 센서 데이터 - alpha: ${sensorData.alpha.toFixed(2)}, beta: ${sensorData.beta.toFixed(2)}, gamma: ${sensorData.gamma.toFixed(2)})`;
     }
 
     if (attemptsLeft > 0 && resultText.includes('시도해 보세요.')) {
