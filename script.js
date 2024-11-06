@@ -31,6 +31,13 @@ function handleOrientation(event) {
     console.log('센서 데이터:', sensorData);
 }
 
+function handleOrientation(event) {
+    console.log(event);  // event 객체 확인
+    sensorData.alpha = event.alpha;
+    sensorData.beta = event.beta;
+    sensorData.gamma = event.gamma;
+}
+
 // 페이지 로드 시 센서 데이터 설정 및 기기 정보 출력
 window.onload = function() {
     setupSensorData();
