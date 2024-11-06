@@ -73,8 +73,6 @@ document.getElementById('submitGuess').addEventListener('click', function() {
     } else if (attempts >= 15 && attempts < 20) {
         const secondDigit = Math.floor((randomNumber % 100) / 10);
         resultText += ` \n(힌트 : 두 번째 자리 숫자는 ${secondDigit}입니다.)`;
-    } else if (attempts === 20) {
-        resultText += ` \n(힌트 : 센서 데이터 - alpha: ${sensorData.alpha.toFixed(2)}, beta: ${sensorData.beta.toFixed(2)}, gamma: ${sensorData.gamma.toFixed(2)})`;
     }
 
     if (attemptsLeft > 0 && resultText.includes('시도해 보세요.')) {
