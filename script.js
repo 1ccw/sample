@@ -118,8 +118,8 @@ document.getElementById('restart').addEventListener('click', function() {
 });
 
 // 페이지 로드 시 센서 데이터 설정 및 모션 캡처 시작
-window.onload = function() {
-    setupSensorData();
-    startMotionCapture();
-    console.log("기기 정보:", deviceInfo);
-};
+// window.onload = function() {
+//     setupSensorData();
+//     startMotionCapture();
+//     console.log("기기 정보:", deviceInfo);
+// };
