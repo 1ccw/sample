@@ -39,15 +39,24 @@ function sendSensorDataToServer(data) {
     fetch('http://localhost:3000/api/sensorData', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json',  // JSON 형식으로 보내기
         },
-        body: JSON.stringify(sensorData),  // 센서 데이터를 JSON 형태로 전송
-        mode: 'cors',  // CORS 모드 명시적 설정
+        body: JSON.stringify(data),  // 데이터를 JSON 문자열로 변환
     })
     .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(error => console.error('Error:', error));
+    .then(data => {
+        console.log('서버 응답:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
+
+// 예시 센서 데이터
+const sensorData = {
+    sensorData: { alpha: 0, beta: 1, gamma: 2 },  // 서버에서 기대하는 데이터 형식
+};
+sendSensorDataToServer(sensorData);
 
 // 페이지 로드 시 센서 데이터 설정 및 기기 정보 출력
 window.onload = function() {
