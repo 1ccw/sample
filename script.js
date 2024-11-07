@@ -29,6 +29,32 @@ function handleOrientation(event) {
     sensorData.beta = event.beta;
     sensorData.gamma = event.gamma;
     console.log('센서 데이터:', sensorData);
+    
+    // 센서 데이터를 서버로 전송
+    sendSensorDataToServer(sensorData);
+}
+
+// 서버로 센서 데이터를 전송하는 함수
+function sendSensorDataToServer(data) {
+    fetch('http://localhost:3000/api/sensorData', {  // 서버 주소 및 엔드포인트
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            alpha: data.alpha,
+            beta: data.beta,
+            gamma: data.gamma,
+            timestamp: new Date()
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('서버 응답:', data);
+    })
+    .catch((error) => {
+        console.error('데이터 전송 오류:', error);
+    });
 }
 
 // 페이지 로드 시 센서 데이터 설정 및 기기 정보 출력
@@ -37,21 +63,20 @@ window.onload = function() {
     console.log("기기 정보:", deviceInfo);
 };
 
+// 아래의 코드는 게임 로직 부분으로 변경사항이 없습니다.
 document.getElementById('submitGuess').addEventListener('click', function() {
-    // 센서 데이터 alert 추가
     alert(`센서 데이터: alpha = ${sensorData.alpha}, beta = ${sensorData.beta}, gamma = ${sensorData.gamma}`);
 
-    const guessInput = document.getElementById('guess').value.trim(); // 공백 제거
+    const guessInput = document.getElementById('guess').value.trim();
     const guess = Number(guessInput);
     attempts++;
     let resultText = '';
     let attemptsLeft = maxAttempts - attempts;
 
-    // 입력 체크
     if (guessInput === '') {
-        alert('숫자를 입력하세요.');  // 공백일 경우 경고 메시지
-        attempts--;  // 시도 횟수 증가하지 않도록
-        return;  // 함수 종료
+        alert('숫자를 입력하세요.');
+        attempts--;
+        return;
     } else if (guess < 1 || guess > 500) {
         resultText = '1부터 500 사이의 숫자를 입력하세요.';
     } else if (guess > randomNumber) {
@@ -61,13 +86,12 @@ document.getElementById('submitGuess').addEventListener('click', function() {
     } else {
         resultText = `축하합니다! ${attempts}번 만에 맞추셨습니다!`;
         document.getElementById('result').innerText = resultText;
-        document.getElementById('attemptsLeft').style.display = 'none';  // 남은 횟수 숨김
+        document.getElementById('attemptsLeft').style.display = 'none';
         document.getElementById('restart').style.display = 'block';
         document.getElementById('submitGuess').disabled = true;
-        return;  // 여기서 함수 종료하여 다른 텍스트가 나타나지 않도록 함
+        return;
     }
 
-    // 힌트 추가
     if (attempts >= 5 && attempts < 10) {
         resultText += ` \n(힌트 : ${randomNumber.toString().length}자리 숫자입니다.)`;
     } else if (attempts >= 10 && attempts < 15) {
@@ -97,7 +121,7 @@ document.getElementById('restart').addEventListener('click', function() {
     document.getElementById('result').innerText = '';
     document.getElementById('guess').value = '';
     document.getElementById('attemptsLeft').innerText = `남은 횟수: ${maxAttempts}`;
-    document.getElementById('attemptsLeft').style.display = 'block';  // 남은 횟수 다시 표시
+    document.getElementById('attemptsLeft').style.display = 'block';
     document.getElementById('restart').style.display = 'none';
     document.getElementById('submitGuess').disabled = false;
 });
