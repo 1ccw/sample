@@ -36,25 +36,17 @@ function handleOrientation(event) {
 
 // 서버로 센서 데이터를 전송하는 함수
 function sendSensorDataToServer(data) {
-    fetch('http://localhost:3000/api/sensorData', {  // 서버 주소 및 엔드포인트
+    fetch('http://localhost:3000/api/sensorData', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            alpha: data.alpha,
-            beta: data.beta,
-            gamma: data.gamma,
-            timestamp: new Date()
-        })
+        body: JSON.stringify(sensorData),  // 센서 데이터를 JSON 형태로 전송
+        mode: 'cors',  // CORS 모드 명시적 설정
     })
     .then(response => response.json())
-    .then(data => {
-        console.log('서버 응답:', data);
-    })
-    .catch((error) => {
-        console.error('데이터 전송 오류:', error);
-    });
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
 }
 
 // 페이지 로드 시 센서 데이터 설정 및 기기 정보 출력
@@ -65,7 +57,7 @@ window.onload = function() {
 
 // 아래의 코드는 게임 로직 부분으로 변경사항이 없습니다.
 document.getElementById('submitGuess').addEventListener('click', function() {
-    alert(`센서 데이터: alpha = ${sensorData.alpha}, beta = ${sensorData.beta}, gamma = ${sensorData.gamma}`);
+    // alert(`센서 데이터: alpha = ${sensorData.alpha}, beta = ${sensorData.beta}, gamma = ${sensorData.gamma}`);
 
     const guessInput = document.getElementById('guess').value.trim();
     const guess = Number(guessInput);
