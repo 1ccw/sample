@@ -44,8 +44,8 @@ function sendMotionData() {
             },
             body: JSON.stringify({ motionData })
         })
-        .then(response => response.json())
-        .then(data => console.log("Data sent to server:", data))
+        .then(response => response.json())  // JSON 응답을 파싱
+        .then(data => console.log("Data sent to server:", data.message))
         .catch(error => console.error("Error sending data:", error));
 
         motionData = []; // 전송 후 배열 초기화
