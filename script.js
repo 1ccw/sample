@@ -4,75 +4,55 @@ let maxAttempts = 20;
 let sensorData = { acceleration: { x: 0, y: 0, z: 0 }, rotationRate: { alpha: 0, beta: 0, gamma: 0 } };  // 센서 데이터 저장 객체
 let deviceInfo = navigator.userAgent;  // 기기 정보
 
-// 권한 요청 및 센서 데이터 가져오는 함수
-function setupSensorData() {
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-        // iOS 13+ 환경에서 권한 요청
-        DeviceOrientationEvent.requestPermission()
-            .then(permissionState => {
-                if (permissionState === 'granted') {
-                    window.addEventListener("deviceorientation", handleOrientation);
-                } else {
-                    alert("센서 데이터 접근이 거부되었습니다.");
-                }
-            })
-            .catch(console.error);
-    } else {
-        // Android 및 다른 환경
-        window.addEventListener("deviceorientation", handleOrientation);
+// 모션 센서 데이터 수집 배열
+let motionData = [];
+
+// DeviceMotionEvent로 가속도 및 회전 속도 데이터 수집
+function handleMotionEvent(event) {
+    const { acceleration, rotationRate } = event;
+    const data = {
+        timestamp: Date.now(),
+        acceleration: {
+            x: acceleration.x || 0,
+            y: acceleration.y || 0,
+            z: acceleration.z || 0
+        },
+        rotationRate: {
+            alpha: rotationRate.alpha || 0,
+            beta: rotationRate.beta || 0,
+            gamma: rotationRate.gamma || 0
+        }
+    };
+    motionData.push(data);
+    if (motionData.length > 50) motionData.shift(); // 데이터 개수 제한
+}
+
+// 서버로 모션 센서 데이터 전송
+function sendMotionData() {
+    if (motionData.length > 0) {
+        fetch(SERVER_URL, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ motionData })
+        })
+        .then(response => response.json())
+        .then(data => console.log("Data sent to server:", data))
+        .catch(error => console.error("Error sending data:", error));
+
+        motionData = []; // 전송 후 배열 초기화
     }
 }
 
-// 센서 데이터 업데이트 함수
-function handleOrientation(event) {
-    sensorData.alpha = event.alpha;
-    sensorData.beta = event.beta;
-    sensorData.gamma = event.gamma;
-    console.log('센서 데이터:', sensorData);
-    
-    // 센서 데이터를 서버로 전송
-    sendSensorDataToServer(sensorData);
-}
+// 주기적으로 모션 데이터를 서버에 전송
+setInterval(sendMotionData, 5000);  //5초마다 전송
 
-// 서버로 센서 데이터를 전송하는 함수
-function sendSensorDataToServer(data) {
-    fetch('http://localhost:3000/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',  // JSON 형식으로 보내기
-        },
-        body: JSON.stringify(data),  // 데이터를 JSON 문자열로 변환
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('서버 응답:', data);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-// 모션 센서 데이터를 수집하는 함수
-function handleMotionEvent(event) {
-    const { acceleration, rotationRate } = event;
-    sensorData.acceleration.x = acceleration.x || 0;
-    sensorData.acceleration.y = acceleration.y || 0;
-    sensorData.acceleration.z = acceleration.z || 0;
-    sensorData.rotationRate.alpha = rotationRate.alpha || 0;
-    sensorData.rotationRate.beta = rotationRate.beta || 0;
-    sensorData.rotationRate.gamma = rotationRate.gamma || 0;
-    console.log('모션 센서 데이터:', sensorData);
-
-    // 센서 데이터를 서버로 전송
-    sendSensorDataToServer(sensorData);
-}
-
-// 모션 데이터 수집 시작 함수
 function startMotionCapture() {
     if (window.DeviceMotionEvent) {
         window.addEventListener("devicemotion", handleMotionEvent);
     } else {
-        console.warn("DeviceMotionEvent는 이 기기에서 지원되지 않습니다.");
+        console.warn("DeviceMotionEvent is not supported on this device.");
     }
 }
 
