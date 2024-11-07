@@ -4,7 +4,7 @@ const MongoClient = require('mongodb').MongoClient;
 const app = express();
 app.use(express.json());
 
-const uri = "mongodb+srv://privacy:<db_password>@privacy.8c1ya.mongodb.net/?retryWrites=true&w=majority&appName=privacy";
+const uri = "MONGO_URI=mongodb://privacy:wNZYBCBgFE9d6PxG@localhost:27017/sensorData";
 const client = new MongoClient(uri);
 
 client.connect().then(() => {
