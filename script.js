@@ -9,6 +9,29 @@ let motionData = [];
 
 const SERVER_URL = "http://localhost:3000/";
 
+async function requestMotionPermission() {
+    if (typeof DeviceMotionEvent.requestPermission === 'function') {
+        try {
+            const permissionState = await DeviceMotionEvent.requestPermission();
+            if (permissionState === 'granted') {
+                startMotionCapture(); // 권한이 허용되면 데이터 수집 시작
+            } else {
+                console.warn('모션 데이터 수집 권한이 거부되었습니다.');
+            }
+        } catch (error) {
+            console.error('모션 데이터 권한 요청 오류:', error);
+        }
+    } else {
+        startMotionCapture(); // 권한 요청이 필요하지 않으면 바로 시작
+    }
+}
+
+// 페이지 로드 시 권한 요청
+window.onload = function() {
+    requestMotionPermission();
+};
+
+
 // DeviceMotionEvent로 가속도 및 회전 속도 데이터 수집
 function handleMotionEvent(event) {
     const { acceleration, rotationRate } = event;
