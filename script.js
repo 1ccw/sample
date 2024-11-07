@@ -26,7 +26,12 @@ function handleMotionEvent(event) {
         }
     };
     motionData.push(data);
-    if (motionData.length > 50) motionData.shift(); // 데이터 개수 제한
+    
+    // 데이터 개수 제한
+    if (motionData.length > 50) motionData.shift(); 
+    
+    // 센서 데이터 콘솔에 출력
+    console.log("센서 데이터:", data);
 }
 
 // 서버로 모션 센서 데이터 전송
@@ -121,7 +126,6 @@ document.getElementById('restart').addEventListener('click', function() {
 
 // 페이지 로드 시 센서 데이터 설정 및 모션 캡처 시작
 window.onload = function() {
-    // setupSensorData();
     startMotionCapture();
     console.log("기기 정보:", deviceInfo);
 };
