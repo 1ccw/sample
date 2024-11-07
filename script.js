@@ -52,12 +52,6 @@ function sendSensorDataToServer(data) {
     });
 }
 
-// 예시 센서 데이터
-const sensorData = {
-    sensorData: { alpha: 0, beta: 1, gamma: 2 },  // 서버에서 기대하는 데이터 형식
-};
-sendSensorDataToServer(sensorData);
-
 // 페이지 로드 시 센서 데이터 설정 및 기기 정보 출력
 window.onload = function() {
     setupSensorData();
@@ -66,8 +60,6 @@ window.onload = function() {
 
 // 아래의 코드는 게임 로직 부분으로 변경사항이 없습니다.
 document.getElementById('submitGuess').addEventListener('click', function() {
-    // alert(`센서 데이터: alpha = ${sensorData.alpha}, beta = ${sensorData.beta}, gamma = ${sensorData.gamma}`);
-
     const guessInput = document.getElementById('guess').value.trim();
     const guess = Number(guessInput);
     attempts++;
