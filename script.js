@@ -36,7 +36,7 @@ function handleOrientation(event) {
 
 // 서버로 센서 데이터를 전송하는 함수
 function sendSensorDataToServer(data) {
-    fetch('http://localhost:3000/api/sensorData', {
+    fetch('http://localhost:3000/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',  // JSON 형식으로 보내기
