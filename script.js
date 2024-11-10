@@ -54,25 +54,26 @@ function handleMotionEvent(event) {
     console.log("센서 데이터:", data);
 }
 
-function sendMotionData() {
-    if (motionData.length > 0) {
-        fetch(SERVER_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                motionData,
-                deviceInfo: navigator.userAgent,  // 기기 정보 추가
-                numberValue: randomNumber  // 숫자 값도 같이 전송 (예시)
-            })
-        })
-        .then(response => response.json())
-        .then(data => console.log("Data sent to server:", data.message))
-        .catch(error => console.error("Error sending data:", error));
+function sendMotionData(acceleration, rotationRate) {
+    const data = {
+        acceleration: acceleration,
+        rotationRate: rotationRate,
+        deviceInfo: navigator.userAgent,  // 기기 정보
+        numberValue: Math.floor(Math.random() * 100)  // 예시로 숫자 값 추가
+    };
 
-        motionData = []; // 전송 후 배열 초기화
-    }
+    fetch('http://localhost:3000', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)  // 데이터를 JSON 형식으로 전송
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('서버 응답:', data);
+    })
+    .catch(error => console.error('에러:', error));
 }
 
 // 주기적으로 모션 데이터를 서버에 전송
