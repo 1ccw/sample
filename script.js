@@ -1,11 +1,9 @@
 let randomNumber = Math.floor(Math.random() * 500) + 1;
 let attempts = 0;
 let maxAttempts = 20;
-let sensorData = { acceleration: { x: 0, y: 0, z: 0 }, rotationRate: { alpha: 0, beta: 0, gamma: 0 } };  // 센서 데이터 저장 객체
-let deviceInfo = navigator.userAgent;  // 기기 정보
-
-// 모션 센서 데이터 수집 배열
-let motionData = [];
+let sensorData = { acceleration: { x: 0, y: 0, z: 0 }, rotationRate: { alpha: 0, beta: 0, gamma: 0 } };
+let deviceInfo = navigator.userAgent;
+let motionData = []; // 모션 센서 데이터 수집 배열
 
 const SERVER_URL = "https://d0c3-1-232-39-83.ngrok-free.app/";
 
@@ -14,7 +12,7 @@ async function requestMotionPermission() {
         try {
             const permissionState = await DeviceMotionEvent.requestPermission();
             if (permissionState === 'granted') {
-                startMotionCapture(); // 권한이 허용되면 데이터 수집 시작
+                startMotionCapture(); // 권한 허용 시 데이터 수집 시작
             } else {
                 console.warn('모션 데이터 수집 권한이 거부되었습니다.');
             }
@@ -25,12 +23,6 @@ async function requestMotionPermission() {
         startMotionCapture(); // 권한 요청이 필요하지 않으면 바로 시작
     }
 }
-
-// 페이지 로드 시 권한 요청
-window.onload = function() {
-    requestMotionPermission();
-};
-
 
 // DeviceMotionEvent로 가속도 및 회전 속도 데이터 수집
 function handleMotionEvent(event) {
@@ -51,7 +43,7 @@ function handleMotionEvent(event) {
     motionData.push(data);
     
     // 데이터 개수 제한
-    if (motionData.length > 50) motionData.shift(); 
+    if (motionData.length > 50) motionData.shift();
     
     // 센서 데이터 콘솔에 출력
     console.log("센서 데이터:", data);
@@ -85,6 +77,12 @@ function startMotionCapture() {
         console.warn("DeviceMotionEvent is not supported on this device.");
     }
 }
+
+// 페이지 로드 시 권한 요청 및 기기 정보 출력
+window.onload = function() {
+    requestMotionPermission();  // 권한 요청 시작
+    console.log("기기 정보:", deviceInfo);
+};
 
 // 게임 로직
 document.getElementById('submitGuess').addEventListener('click', function() {
@@ -146,9 +144,3 @@ document.getElementById('restart').addEventListener('click', function() {
     document.getElementById('restart').style.display = 'none';
     document.getElementById('submitGuess').disabled = false;
 });
-
-// 페이지 로드 시 센서 데이터 설정 및 모션 캡처 시작
-window.onload = function() {
-    startMotionCapture();
-    console.log("기기 정보:", deviceInfo);
-};
