@@ -12,7 +12,6 @@ async function requestMotionPermission() {
         try {
             const permissionState = await DeviceMotionEvent.requestPermission();
             if (permissionState === 'granted') {
-                console.log("모션 권한 허용됨.");
                 startMotionCapture(); // 권한이 허용되면 데이터 수집 시작
             } else {
                 console.warn('모션 데이터 수집 권한이 거부되었습니다.');
@@ -21,10 +20,14 @@ async function requestMotionPermission() {
             console.error('모션 데이터 권한 요청 오류:', error);
         }
     } else {
-        console.log("모션 권한 요청 불필요.");
         startMotionCapture(); // 권한 요청이 필요하지 않으면 바로 시작
     }
 }
+
+// 페이지 로드 시 권한 요청
+window.onload = function() {
+    requestMotionPermission();
+};
 
 // DeviceMotionEvent로 가속도 및 회전 속도 데이터 수집
 function handleMotionEvent(event) {
@@ -51,7 +54,6 @@ function handleMotionEvent(event) {
     console.log("센서 데이터:", data);
 }
 
-// 서버로 모션 센서 데이터 전송
 function sendMotionData() {
     if (motionData.length > 0) {
         fetch(SERVER_URL, {
@@ -59,9 +61,13 @@ function sendMotionData() {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ motionData })
+            body: JSON.stringify({
+                motionData,
+                deviceInfo: navigator.userAgent,  // 기기 정보 추가
+                numberValue: randomNumber  // 숫자 값도 같이 전송 (예시)
+            })
         })
-        .then(response => response.json())  // JSON 응답을 파싱
+        .then(response => response.json())
         .then(data => console.log("Data sent to server:", data.message))
         .catch(error => console.error("Error sending data:", error));
 
