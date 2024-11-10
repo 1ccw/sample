@@ -12,7 +12,8 @@ async function requestMotionPermission() {
         try {
             const permissionState = await DeviceMotionEvent.requestPermission();
             if (permissionState === 'granted') {
-                startMotionCapture(); // 권한 허용 시 데이터 수집 시작
+                console.log("모션 권한 허용됨.");
+                startMotionCapture(); // 권한이 허용되면 데이터 수집 시작
             } else {
                 console.warn('모션 데이터 수집 권한이 거부되었습니다.');
             }
@@ -20,6 +21,7 @@ async function requestMotionPermission() {
             console.error('모션 데이터 권한 요청 오류:', error);
         }
     } else {
+        console.log("모션 권한 요청 불필요.");
         startMotionCapture(); // 권한 요청이 필요하지 않으면 바로 시작
     }
 }
