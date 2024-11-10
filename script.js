@@ -7,7 +7,7 @@ let deviceInfo = navigator.userAgent;  // 기기 정보
 // 모션 센서 데이터 수집 배열
 let motionData = [];
 
-const SERVER_URL = "https://localhost:80";
+const SERVER_URL = "https://localhost:3000";
 
 async function requestMotionPermission() {
     if (typeof DeviceMotionEvent.requestPermission === 'function') {
