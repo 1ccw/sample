@@ -7,7 +7,7 @@ let deviceInfo = navigator.userAgent;  // 기기 정보
 // 모션 센서 데이터 수집 배열
 let motionData = [];
 
-const SERVER_URL = "https://b0df-1-232-39-83.ngrok-free.app/";
+const SERVER_URL = "https://d0c3-1-232-39-83.ngrok-free.app/";
 
 async function requestMotionPermission() {
     if (typeof DeviceMotionEvent.requestPermission === 'function') {
